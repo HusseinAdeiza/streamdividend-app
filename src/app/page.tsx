@@ -21,11 +21,15 @@ export default function Home() {
   const { connection } = useConnection();
   const [vault, setVault] = useState<VaultAccount | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [updated, setUpdated] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
       const v = await fetchVaultState(connection);
-      if (v) setVault(v.vault as VaultAccount);
+      if (v) {
+        setVault(v.vault as VaultAccount);
+        setUpdated(new Date().toLocaleTimeString());
+      }
     } catch {
       /* leave empty; retry on next tick */
     } finally {
@@ -94,6 +98,11 @@ export default function Home() {
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <span className="label">Live from the chain</span>
+            {updated && (
+              <span className="mono ml-2 text-[11px] text-[#8a826d]">
+                · updated {updated}
+              </span>
+            )}
             <h2 className="display mt-3 text-3xl">The vault ledger</h2>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-[#57503f]">
               Read straight from the deployed program — refreshed as the vault
