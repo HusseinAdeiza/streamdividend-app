@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local validator ledger (68MB, contains faucet keypair)
+/test-ledger/
