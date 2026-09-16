@@ -1,5 +1,7 @@
 "use client";
 
+/* v3 — basePath deploy (assets scoped to /streamdividend-app) */
+
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
