@@ -1,47 +1,80 @@
 // PDA + ATA helpers + program wiring shared across pages.
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Connection } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { Program, AnchorProvider, BN, Idl } from "@coral-xyz/anchor";
-import { idl, PROGRAM_ID, VAULT_AUTHORITY, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from "./constants";
+import { idl, PROGRAM_ID, VAULT_AUTHORITY, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, FALLBACK_RPC } from "./constants";
 
 const PROGRAM = new PublicKey(PROGRAM_ID);
+
+// Never let a slow / rate-limited RPC hang the UI.
+function withTimeout<T>(p: Promise<T>, ms: number, label = "rpc"): T {
+  return Promise.race([
+    p,
+    new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`${label} timed out`)), ms)),
+  ]) as T;
+}
 
 export function getProgram(provider: AnchorProvider): Program {
   const idlWithAddress = { ...(idl as any), address: PROGRAM_ID };
   return new Program(idlWithAddress as unknown as Idl, provider as any);
 }
 
-// Read-only fetch of the vault account (no wallet needed).
-export async function fetchVaultState(connection: import("@solana/web3.js").Connection) {
-  const provider = new AnchorProvider(
-    connection,
-    { publicKey: null } as any,
-    { commitment: "confirmed" }
-  );
-  const program = getProgram(provider);
+function makeReadOnlyProvider(connection: Connection) {
+  return new AnchorProvider(connection, { publicKey: null } as any, { commitment: "confirmed" });
+}
+
+// Read-only fetch of the vault account (no wallet needed). Tries the given
+// connection first, then falls back to the public endpoint if that one is
+// rate-limited or down, so the ledger never sits on "reading mainnet…".
+export async function fetchVaultState(connection: Connection, timeoutMs = 8000) {
   const [vaultKey] = vaultPda(new PublicKey(VAULT_AUTHORITY));
-  const info = await connection.getAccountInfo(vaultKey, "confirmed");
-  if (!info) return null;
-  const vault: any = program.coder.accounts.decode("Vault", info.data);
-  return { vaultKey, vault };
+  const candidates: Connection[] = [connection];
+  try {
+    candidates.push(new Connection(FALLBACK_RPC, "confirmed"));
+  } catch { /* ignore */ }
+
+  let lastErr: unknown;
+  for (const conn of candidates) {
+    try {
+      const provider = makeReadOnlyProvider(conn);
+      const program = getProgram(provider);
+      const info = await withTimeout(conn.getAccountInfo(vaultKey, "confirmed"), timeoutMs);
+      if (!info) return null;
+      const vault: any = program.coder.accounts.decode("Vault", info.data);
+      return { vaultKey, vault };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr ?? new Error("vault read failed");
 }
 
 export async function fetchUserState(
-  connection: import("@solana/web3.js").Connection,
+  connection: Connection,
   vaultKey: PublicKey,
-  user: PublicKey
+  user: PublicKey,
+  timeoutMs = 8000
 ) {
-  const provider = new AnchorProvider(
-    connection,
-    { publicKey: null } as any,
-    { commitment: "confirmed" }
-  );
-  const program = getProgram(provider);
   const [usKey] = userStatePda(vaultKey, user);
-  const info = await connection.getAccountInfo(usKey, "confirmed");
-  if (!info) return null;
-  const userState: any = program.coder.accounts.decode("UserState", info.data);
-  return { userStateKey: usKey, userState };
+  const candidates: Connection[] = [connection];
+  try {
+    candidates.push(new Connection(FALLBACK_RPC, "confirmed"));
+  } catch { /* ignore */ }
+
+  let lastErr: unknown;
+  for (const conn of candidates) {
+    try {
+      const provider = makeReadOnlyProvider(conn);
+      const program = getProgram(provider);
+      const info = await withTimeout(conn.getAccountInfo(usKey, "confirmed"), timeoutMs);
+      if (!info) return null;
+      const userState: any = program.coder.accounts.decode("UserState", info.data);
+      return { userStateKey: usKey, userState };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr ?? new Error("user state read failed");
 }
 
 export type { AnchorProvider as Provider };

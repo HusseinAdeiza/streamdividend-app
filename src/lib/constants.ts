@@ -25,10 +25,14 @@ export const VAULT_AUTHORITY = "4KTQiDUyvnkWyK7Vs4hnAp54UZecu3Vo1jku3JQ6kHWi";
 // vault_xstock:   E4qLqRdxvv1HTAS7gePCq9JMaNhE1BpXh3WUEJjezpsk  (AAPLx, Token-2022)
 // vault_dividend: 3khNwQmsAwXaeLZe4dWGtpEfs7FjQpjEqhPjZyeGydQg  (USDC, v3)
 
-export const DEFAULT_RPC = "https://api.mainnet-beta.solana.com";
+// Mainnet by default. The public Solana endpoint (mainnet-beta) rate-limits
+// cross-origin browser calls (403), which made the live ledger hang. Use a
+// CORS-open public RPC for reads; set NEXT_PUBLIC_RPC to override (e.g. your
+// own Helius/QuickNode key, or a local validator via LOCAL_RPC).
+export const DEFAULT_RPC = "https://solana-rpc.publicnode.com";
+export const FALLBACK_RPC = "https://api.mainnet-beta.solana.com";
 export const LOCAL_RPC = "http://localhost:8899";
 
-// Mainnet by default; set NEXT_PUBLIC_RPC to override (e.g. local validator).
 export const RPC_URL = process.env.NEXT_PUBLIC_RPC ?? DEFAULT_RPC;
 
 export const PRECISION = 1_000_000_000_000; // 1e12
