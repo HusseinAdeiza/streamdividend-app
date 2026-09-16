@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Sans, Spline_Sans_Mono } from "next/font/google";
+import { Inter, Spline_Sans_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Nav } from "@/components/nav";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display-var",
-  axes: ["opsz"],
-  display: "swap",
-});
-const instrument = Instrument_Sans({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans-var",
   display: "swap",
@@ -33,10 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${instrument.variable} ${spline.variable}`}
+        className={`${inter.variable} ${spline.variable}`}
         style={
           {
-            "--font-display": "var(--font-display-var)",
             "--font-sans": "var(--font-sans-var)",
             "--font-mono": "var(--font-mono-var)",
           } as React.CSSProperties
@@ -54,30 +47,34 @@ export default function RootLayout({
 
 function Footer() {
   return (
-    <footer className="border-t border-[#191509]">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-end sm:justify-between">
+    <footer className="mt-24 border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="wordmark">
-            Stream<span className="slash">/</span>Dividend
+          <div className="logo">
+            <span className="logo__mark" aria-hidden="true">
+              S
+            </span>
+            StreamDividend
           </div>
-          <p className="mt-2 max-w-sm text-sm text-[#57503f]">
-            A dividend-streaming vault for tokenized equities. Built for the
-            Stocklana hackathon — live on Solana mainnet.
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-2">
+            A dividend-streaming vault for tokenized equities. Deposit AAPLx,
+            and Apple&rsquo;s dividends accrue to your position in USDC as
+            they pay.
           </p>
         </div>
-        <div className="flex flex-col gap-2">
-          <span className="label">On chain</span>
-          <div className="mono text-xs text-[#57503f]">
+        <div className="flex flex-col gap-3">
+          <span className="eyebrow">On chain</span>
+          <div className="mono text-[13px] text-ink-2">
             <a
               className="addr"
               href="https://solscan.io/account/LuTgK5iC7MvcnWGeJTsXpZH6bHZ4Cf95m333U8ed9kA"
               target="_blank"
               rel="noreferrer"
             >
-              program · LuTgK5iC…8ed9kA
+              Program LuTgK5iC…8ed9kA
             </a>
           </div>
-          <div className="mono text-xs text-[#57503f]">
+          <div className="mono text-[13px] text-ink-2">
             <a
               className="addr"
               href="https://github.com/HusseinAdeiza/streamdividend"

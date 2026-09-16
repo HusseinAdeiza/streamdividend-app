@@ -4,37 +4,55 @@
 
 /* =========================================================================
    StreamDividend — design system
-   Editorial, paper-and-ink identity. One accent (pine), one counter (oxblood),
-   one live signal (gold). Hairline rules over cards; serif display over sans.
+   Clean, modern financial product. One green accent, a cool neutral ramp,
+   soft elevation, strong tabular numerals, no decoration.
    ========================================================================= */
 
 :root {
   color-scheme: light;
 
-  /* palette */
-  --paper: #f3efe5;
-  --paper-2: #ebe5d6;
-  --panel: #f7f4ec;
-  --ink: #191509;
-  --ink-2: #57503f;
-  --ink-3: #8a826d;
-  --line: #d9d1bd;
-  --line-2: #c7bda3;
+  /* neutrals (cool ramp) */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --ink: #101828;
+  --ink-2: #475467;
+  --ink-3: #98a2b3;
+  --border: #e4e7ec;
+  --border-2: #d0d5dd;
 
-  --pine: #1c5a43;
-  --pine-2: #2c7257;
-  --pine-ink: #0f2e22;
+  /* accent — deep, premium green */
+  --accent: #0f6e4a;
+  --accent-hover: #0c5a3d;
+  --accent-soft: #e9f4ee;
+  --accent-ring: rgba(15, 110, 74, 0.32);
 
-  --ox: #8f371d;
-  --ox-2: #a8452a;
-
-  --gold: #a97a1c;
-  --gold-2: #c5952e;
+  /* semantic */
+  --danger: #d92d20;
+  --danger-soft: #fef3f2;
+  --warn: #b45309;
 
   /* type */
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
-  --font-mono: "Spline Sans Mono", "SFMono-Regular", ui-monospace, monospace;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* radii */
+  --r-sm: 8px;
+  --r-md: 10px;
+  --r-lg: 14px;
+
+  /* elevation */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 12px 24px -6px rgba(16, 24, 40, 0.14), 0 4px 8px -4px rgba(16, 24, 40, 0.08);
+
+  /* map to tailwind color config */
+  --background: var(--bg);
+  --foreground: var(--ink);
+}
+
+* {
+  border-color: var(--border);
 }
 
 html {
@@ -44,27 +62,20 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* faint ledger rulings, barely there */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 47px,
-    rgba(25, 21, 9, 0.028) 47px,
-    rgba(25, 21, 9, 0.028) 48px
-  );
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* selection */
 ::selection {
-  background: var(--pine);
-  color: var(--paper);
+  background: var(--accent);
+  color: #fff;
 }
 
 a {
@@ -72,246 +83,283 @@ a {
   text-decoration: none;
 }
 
-/* ---- type utilities ---------------------------------------------------- */
-.display {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  letter-spacing: -0.01em;
-  font-weight: 500;
-  line-height: 0.98;
-}
-.display em {
-  font-style: italic;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  color: var(--pine);
-}
-.display .num {
-  font-variant-numeric: tabular-nums;
+/* real focus ring for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+/* ---- typography -------------------------------------------------------- */
+h1, h2, h3 {
+  margin: 0;
+  letter-spacing: -0.022em;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--ink);
+  text-wrap: balance;
 }
-.label--ink {
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink-2);
 }
+
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- hairlines / rules ------------------------------------------------- */
-.rule {
-  border: 0;
-  border-top: 1px solid var(--line);
-}
-.rule--strong {
-  border-top: 2px solid var(--ink);
+.tabular {
+  font-variant-numeric: tabular-nums;
 }
 
-/* ---- masthead ---------------------------------------------------------- */
+/* ---- layout ------------------------------------------------------------- */
+.wrap {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ---- masthead / nav ----------------------------------------------------- */
 .masthead {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: color-mix(in srgb, var(--paper) 86%, transparent);
-  backdrop-filter: saturate(1.1) blur(8px);
-  border-bottom: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--border);
 }
-.wordmark {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 19px;
-  letter-spacing: -0.01em;
+.navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 }
-.wordmark .slash {
-  color: var(--pine);
-  font-style: italic;
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.logo__mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 700;
 }
 .navlink {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--ink-2);
-  padding: 6px 2px;
-  border-bottom: 1.5px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  transition: color 0.15s ease, background 0.15s ease;
 }
-.navlink:hover,
+.navlink:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
 .navlink[aria-current="page"] {
   color: var(--ink);
-  border-bottom-color: var(--pine);
+  background: var(--surface-2);
 }
 
-/* ---- live signal ------------------------------------------------------- */
+/* ---- live indicator ----------------------------------------------------- */
 .live {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--ink-2);
 }
 .live__dot {
   position: relative;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: var(--gold);
+  background: var(--accent);
 }
 .live__dot::after {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: -3px;
   border-radius: 999px;
-  border: 1px solid var(--gold);
-  animation: live-ping 2.4s ease-out infinite;
+  border: 1px solid var(--accent);
+  animation: live-ping 2.2s ease-out infinite;
 }
 @keyframes live-ping {
-  0% { transform: scale(0.6); opacity: 0.9; }
-  70%, 100% { transform: scale(1.8); opacity: 0; }
+  0% { transform: scale(0.5); opacity: 0.8; }
+  70%, 100% { transform: scale(1.7); opacity: 0; }
 }
 
-/* ---- panels / ledger --------------------------------------------------- */
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--ink);
-  box-shadow: 4px 4px 0 0 rgba(25, 21, 9, 0.10);
-}
-.panel--flat {
-  box-shadow: none;
-  background: transparent;
-}
-
-.ledger-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 13px 0;
-  border-top: 1px solid var(--line);
-}
-.ledger-row:first-child {
-  border-top: 0;
-}
-.ledger-row .k {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-.ledger-row .v {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 15px;
-  color: var(--ink);
-  text-align: right;
-}
-
-/* ---- big numbers ------------------------------------------------------- */
-.money {
-  font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  font-weight: 500;
-}
-.money--pine { color: var(--pine); }
-.money--ox { color: var(--ox); }
-
-/* ---- buttons ----------------------------------------------------------- */
+/* ---- buttons ------------------------------------------------------------ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 14px 22px;
-  border: 1px solid var(--ink);
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 11px 20px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
   cursor: pointer;
-  background: transparent;
-  color: var(--ink);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease,
-    color 0.15s ease;
+  white-space: nowrap;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease,
+    box-shadow 0.16s ease, transform 0.1s ease;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .btn:active:not(:disabled) {
   transform: translateY(1px);
 }
 .btn:disabled {
   cursor: not-allowed;
-  opacity: 0.45;
+  opacity: 0.55;
 }
 .btn--primary {
-  background: var(--pine);
-  color: var(--paper);
-  border-color: var(--pine);
-  box-shadow: 3px 3px 0 0 var(--pine-ink);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
 }
 .btn--primary:hover:not(:disabled) {
-  background: var(--pine-2);
-  box-shadow: 4px 4px 0 0 var(--pine-ink);
-  transform: translate(-1px, -1px);
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-md);
 }
-.btn--ox {
-  background: var(--ox);
-  color: var(--paper);
-  border-color: var(--ox);
-  box-shadow: 3px 3px 0 0 #4e1c0c;
+.btn--secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--border-2);
+  box-shadow: var(--shadow-sm);
 }
-.btn--ox:hover:not(:disabled) {
-  background: var(--ox-2);
-  box-shadow: 4px 4px 0 0 #4e1c0c;
-  transform: translate(-1px, -1px);
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--ink-3);
+  background: var(--surface-2);
 }
 .btn--ghost {
   background: transparent;
+  color: var(--ink-2);
 }
 .btn--ghost:hover:not(:disabled) {
-  background: var(--paper-2);
+  background: var(--surface-2);
+  color: var(--ink);
 }
 .btn .arrow {
-  transition: transform 0.15s ease;
+  transition: transform 0.16s ease;
 }
 .btn:hover:not(:disabled) .arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
+}
+.btn--block {
+  width: 100%;
+}
+.btn--lg {
+  padding: 13px 24px;
+  font-size: 16px;
 }
 
-/* ---- input ------------------------------------------------------------- */
+/* ---- cards -------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card--pad {
+  padding: 22px;
+}
+.card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+}
+
+/* ---- data rows (ledger) ------------------------------------------------- */
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--border);
+}
+.row:first-child {
+  border-top: 0;
+}
+.row .k {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.row .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+}
+.row .v--accent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- big stat ----------------------------------------------------------- */
+.stat {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.stat--accent { color: var(--accent); }
+.stat-unit {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+/* ---- field ---------------------------------------------------------------- */
 .field {
   width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--line-2);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-md);
   color: var(--ink);
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
-  font-size: 46px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  padding: 10px 18px 14px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  padding: 14px 16px;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .field::placeholder {
-  color: var(--line-2);
+  color: var(--ink-3);
 }
 .field:focus {
-  border-color: var(--pine);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pine) 18%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-ring);
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -323,164 +371,124 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* ---- stream motif (honest: represents the per-share stream) ----------- */
-.stream {
-  position: relative;
-  height: 2px;
-  background: var(--line-2);
-  overflow: hidden;
-}
-.stream::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 34%;
-  background: linear-gradient(90deg, transparent, var(--pine));
-  animation: stream-flow 3.2s linear infinite;
-}
-.stream::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 0;
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  border-radius: 999px;
-  background: var(--pine);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pine) 22%, transparent);
-}
-@keyframes stream-flow {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(340%); }
-}
-
-/* ---- sig receipt ------------------------------------------------------- */
+/* ---- status pills / receipts -------------------------------------------- */
 .receipt {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: color-mix(in srgb, var(--pine) 7%, var(--panel));
-  border: 1px solid color-mix(in srgb, var(--pine) 40%, var(--line));
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: var(--r-md);
   font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--pine-ink);
+  font-size: 13px;
+  color: var(--accent-hover);
 }
 .receipt a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .err {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--ox);
-  background: color-mix(in srgb, var(--ox) 8%, var(--panel));
-  border: 1px solid color-mix(in srgb, var(--ox) 35%, var(--line));
+  font-size: 14px;
+  color: var(--danger);
+  background: var(--danger-soft);
+  border: 1px solid color-mix(in srgb, var(--danger) 24%, var(--border));
+  border-radius: var(--r-md);
   padding: 12px 14px;
 }
 
-/* ---- footer ------------------------------------------------------------ */
+/* ---- skeleton ----------------------------------------------------------- */
+.skel {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border-radius: 6px;
+  min-height: 14px;
+}
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  animation: skel 1.4s ease-in-out infinite;
+}
+@keyframes skel {
+  100% { transform: translateX(100%); }
+}
+
+/* ---- address link ------------------------------------------------------- */
 .addr {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-2);
   text-decoration: underline;
-  text-decoration-color: var(--line-2);
+  text-decoration-color: var(--border-2);
   text-underline-offset: 3px;
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 .addr:hover {
-  color: var(--pine);
-  text-decoration-color: var(--pine);
+  color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
-/* ---- reveal ------------------------------------------------------------ */
-.reveal {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.in {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---- wallet-adapter overrides (match the paper/ink system) ------------- */
+/* ---- wallet-adapter overrides (match the system) ------------------------- */
 .wallet-adapter-button {
   background: var(--ink) !important;
-  color: var(--paper) !important;
+  color: #fff !important;
   border: 1px solid var(--ink) !important;
-  border-radius: 0 !important;
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  padding: 0 16px !important;
+  border-radius: var(--r-md) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 18px !important;
+  transition: background 0.16s ease, transform 0.1s ease !important;
 }
 .wallet-adapter-button:hover {
-  background: var(--pine) !important;
-  border-color: var(--pine) !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
-.wallet-adapter-button-trigger {
-  font-family: var(--font-mono) !important;
+.wallet-adapter-button-list .wallet-adapter-button {
+  border-radius: var(--r-md) !important;
 }
 .wallet-adapter-modal {
-  background: var(--paper) !important;
+  background: var(--bg) !important;
   color: var(--ink) !important;
-  border-radius: 0 !important;
+  border-radius: var(--r-lg) !important;
 }
 .wallet-adapter-modal .wallet-adapter-modal-header {
-  border-bottom: 1px solid var(--line);
-}
-.wallet-adapter-modal .wallet-adapter-modal-header button {
-  color: var(--ink);
+  border-bottom: 1px solid var(--border);
 }
 .wallet-adapter-modal-header h2 {
-  font-family: var(--font-display) !important;
-  font-weight: 600 !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
   color: var(--ink) !important;
 }
 .wallet-adapter-list .wallet-adapter-item {
-  background: var(--panel) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: 0 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-md) !important;
   color: var(--ink) !important;
 }
 .wallet-adapter-list .wallet-adapter-item:hover {
-  background: var(--paper-2) !important;
-}
-.wallet-adapter-list .wallet-adapter-item .wallet-adapter-item-button {
-  background: transparent !important;
-  color: var(--ink) !important;
-}
-.wallet-adapter-button-list .wallet-adapter-button {
-  border-radius: 0 !important;
+  background: var(--surface-2) !important;
 }
 .wallet-adapter-modal-body,
 .wallet-adapter-modal-footer {
-  background: var(--paper) !important;
-  color: var(--ink) !important;
-}
-.wallet-adapter-modal-footer button {
+  background: var(--bg) !important;
   color: var(--ink) !important;
 }
 .wallet-adapter-modal-footer button:hover {
-  background: var(--paper-2) !important;
-}
-.wallet-adapter-close {
-  color: var(--ink) !important;
+  background: var(--surface-2) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
   .live__dot::after { animation: none; opacity: 0; }
-  .stream::before { animation: none; transform: translateX(0); opacity: 0.5; }
-  .btn, .btn .arrow { transition: none; }
+  .skel::after { animation: none; }
+  .btn, .btn .arrow, .navlink, .field { transition: none; }
 }

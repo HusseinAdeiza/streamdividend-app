@@ -95,27 +95,25 @@ export default function DashboardPage() {
 
   if (!wallet.connected) {
     return (
-      <div className="mx-auto max-w-6xl px-5 py-24">
-        <div className="grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <span className="label">Your position</span>
-            <h1 className="display mt-3 text-4xl">
-              Connect to
-              <br />
-              read your <em>shares</em>.
+      <div className="wrap py-20 sm:py-28">
+        <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-5">
+            <h1 className="text-4xl sm:text-5xl">
+              Connect to read your position.
             </h1>
-          </div>
-          <div className="panel flex flex-col justify-center gap-4 p-8 lg:col-span-8">
-            <p className="max-w-md text-[15px] leading-relaxed text-[#57503f]">
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-2">
               Your position lives in a program-derived account owned by your
-              wallet — nothing here is custodial. Sign in with Phantom or
-              Solflare to see your shares and accrued dividends.
+              wallet. Nothing here is custodial — connect to see your shares
+              and accrued dividends.
             </p>
-            <p className="mono text-xs text-[#8a826d]">
-              Use the wallet button, top right.
+          </div>
+          <div className="card card--pad lg:col-span-7">
+            <p className="text-ink-2">
+              Use the <span className="font-medium text-ink">Connect Wallet</span>{" "}
+              button in the top right to continue.
             </p>
-            <Link href="/deposit" className="btn btn--ghost">
-              How deposit works <span className="arrow">→</span>
+            <Link href="/deposit" className="btn btn--secondary mt-6">
+              How deposit works <span className="arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
@@ -125,106 +123,97 @@ export default function DashboardPage() {
 
   const shares = userState ? toUi(userState.shares, 6) : "0";
   const earned = vault && userState ? toUi(earnedAmount(userState, vault), 6) : "0.000000";
-  const totalDist = vault ? toUi(vault.totalDividendsDistributed, 6) : "0";
   const dps = vault ? toUi(vault.dividendsPerShare, 6) : "0";
   const canClaim = Number(earned) > 0.000001;
-  const canWithdraw = userState && Number(userState.shares.toString()) > 0;
+  const canWithdraw = !!userState && Number(userState.shares.toString()) > 0;
+  const walletShort = wallet.publicKey
+    ? `${wallet.publicKey.toBase58().slice(0, 4)}…${wallet.publicKey.toBase58().slice(-4)}`
+    : "";
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-      {/* header */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="wrap py-12 sm:py-16">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="label">Your position</span>
-          <h1 className="display mt-2 text-4xl sm:text-5xl">
-            {wallet.publicKey
-              ? `${wallet.publicKey.toBase58().slice(0, 4)}…${wallet.publicKey.toBase58().slice(-4)}`
-              : ""}
-          </h1>
+          <span className="eyebrow">Your position</span>
+          <h1 className="mt-1 text-3xl sm:text-4xl">{walletShort}</h1>
         </div>
         <span className="live">
-          <span className="live__dot" /> live · 5s
+          <span className="live__dot" aria-hidden="true" />
+          Live · refreshes every 5s
         </span>
       </div>
 
-      <div className="stream my-10" aria-hidden="true" />
-
-      <div className="grid gap-8 lg:grid-cols-12">
-        {/* earned — the one number that matters */}
-        <div className="lg:col-span-7">
-          <span className="label label--ink">Accrued to your shares</span>
-          <div className="mt-4 flex items-end gap-3">
-            <span className="money money--ox text-[72px] sm:text-[96px]">
+      <div className="mt-8 grid gap-6 lg:grid-cols-12">
+        {/* primary stat */}
+        <div className="card card--pad lg:col-span-7">
+          <span className="card__title">Accrued to your shares</span>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="stat text-6xl sm:text-7xl stat--accent tabular">
               {earned}
             </span>
-            <span className="mono mb-3 text-sm text-[#8a826d]">USDC</span>
+            <span className="stat-unit">USDC</span>
           </div>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-[#57503f]">
-            Accrues the instant the vault triggers a dividend. Claim it and
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-2">
+            Accrues the instant the vault triggers a dividend. When you claim,
             it settles to your USDC token account on mainnet.
           </p>
-
-          <div className="mt-8 grid gap-x-10 sm:grid-cols-2">
-            <div className="ledger-row">
-              <span className="k">Your shares</span>
-              <span className="v">{shares} AAPLx</span>
-            </div>
-            <div className="ledger-row">
-              <span className="k">Dividends / share</span>
-              <span className="v">{dps} USDC</span>
-            </div>
-            <div className="ledger-row">
-              <span className="k">Distributed to date</span>
-              <span className="v">{totalDist} USDC</span>
-            </div>
-            <div className="ledger-row">
-              <span className="k">Status</span>
-              <span className="v">
-                {canClaim ? "claimable" : "accruing"}
-              </span>
-            </div>
-          </div>
         </div>
 
-        {/* action rail */}
-        <div className="lg:col-span-5">
-          <div className="panel flex flex-col gap-3 p-6">
-            <span className="label mb-1">Actions</span>
-            <button
-              onClick={onClaim}
-              disabled={busy || !canClaim}
-              className="btn btn--primary w-full"
-            >
-              {busy ? "Working…" : `Claim ${canClaim ? earned : ""} USDC`.trim()}
-            </button>
-            <button
-              onClick={onWithdraw}
-              disabled={busy || !canWithdraw}
-              className="btn btn--ox w-full"
-            >
-              Withdraw all AAPLx
-            </button>
-            <p className="mono text-[11px] leading-relaxed text-[#8a826d]">
-              Withdraw pays out your accrued USDC first, then returns your
-              AAPLx share-for-share.
-            </p>
-          </div>
+        {/* action panel */}
+        <div className="card card--pad flex flex-col gap-3 lg:col-span-5">
+          <span className="card__title">Actions</span>
+          <button
+            onClick={onClaim}
+            disabled={busy || !canClaim}
+            className="btn btn--primary btn--block"
+          >
+            {busy ? "Working…" : canClaim ? `Claim ${earned} USDC` : "Claim USDC"}
+          </button>
+          <button
+            onClick={onWithdraw}
+            disabled={busy || !canWithdraw}
+            className="btn btn--secondary btn--block"
+          >
+            Withdraw all AAPLx
+          </button>
+          <p className="mt-1 text-xs leading-relaxed text-ink-3">
+            Withdraw pays out your accrued USDC first, then returns your AAPLx
+            share for share.
+          </p>
+        </div>
 
-          {sig && (
-            <div className="receipt mt-4">
-              <span>✓ confirmed</span>
-              <a
-                href={`https://solscan.io/tx/${sig}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {sig.slice(0, 8)}…{sig.slice(-6)}
-              </a>
-            </div>
-          )}
-          {err && <div className="err mt-4">{err}</div>}
+        {/* detail rows */}
+        <div className="card card--pad lg:col-span-12">
+          <div className="grid gap-x-10 sm:grid-cols-2">
+            <Row k="Your shares" v={`${shares} AAPLx`} />
+            <Row k="Dividends per share" v={`${dps} USDC`} />
+            <Row
+              k="Status"
+              v={canClaim ? "Claimable now" : canWithdraw ? "Accruing" : "No position yet"}
+              accent={canClaim}
+            />
+          </div>
         </div>
       </div>
+
+      {sig && (
+        <div className="receipt mt-4">
+          <span>Confirmed</span>
+          <a href={`https://solscan.io/tx/${sig}`} target="_blank" rel="noreferrer">
+            {sig.slice(0, 8)}…{sig.slice(-6)}
+          </a>
+        </div>
+      )}
+      {err && <div className="err mt-4">{err}</div>}
+    </div>
+  );
+}
+
+function Row({ k, v, accent }: { k: string; v: string; accent?: boolean }) {
+  return (
+    <div className="row">
+      <span className="k">{k}</span>
+      <span className={`v ${accent ? "v--accent" : ""}`}>{v}</span>
     </div>
   );
 }
