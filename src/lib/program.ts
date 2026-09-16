@@ -15,8 +15,8 @@ function withTimeout<T>(p: Promise<T>, ms: number, label = "rpc"): T {
 }
 
 export function getProgram(provider: AnchorProvider): Program {
-  const idlWithAddress = { ...(idl as any), address: PROGRAM_ID };
-  return new Program(idlWithAddress as unknown as Idl, provider as any);
+  // anchor 0.29 positional API: Program(idl, programId, provider)
+  return new Program(idl as any, PROGRAM, provider as any);
 }
 
 function makeReadOnlyProvider(connection: Connection) {

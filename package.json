@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.32.1",
+    "@coral-xyz/anchor": "0.29.0",
     "@solana/spl-token": "^0.4.15",
     "@solana/wallet-adapter-base": "^0.9.28",
     "@solana/wallet-adapter-react": "^0.15.40",
@@ -21,8 +21,8 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
@@ -30,7 +30,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@types/react": "$@types/react",
-    "@types/react-dom": "$@types/react-dom"
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7"
   }
 }
