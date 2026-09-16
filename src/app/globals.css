@@ -2,22 +2,485 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+   StreamDividend — design system
+   Editorial, paper-and-ink identity. One accent (pine), one counter (oxblood),
+   one live signal (gold). Hairline rules over cards; serif display over sans.
+   ========================================================================= */
+
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+
+  /* palette */
+  --paper: #f3efe5;
+  --paper-2: #ebe5d6;
+  --panel: #f7f4ec;
+  --ink: #191509;
+  --ink-2: #57503f;
+  --ink-3: #8a826d;
+  --line: #d9d1bd;
+  --line-2: #c7bda3;
+
+  --pine: #1c5a43;
+  --pine-2: #2c7257;
+  --pine-ink: #0f2e22;
+
+  --ox: #8f371d;
+  --ox-2: #a8452a;
+
+  --gold: #a97a1c;
+  --gold-2: #c5952e;
+
+  /* type */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "Spline Sans Mono", "SFMono-Regular", ui-monospace, monospace;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-black text-zinc-100 antialiased;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* faint ledger rulings, barely there */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 47px,
+    rgba(25, 21, 9, 0.028) 47px,
+    rgba(25, 21, 9, 0.028) 48px
+  );
 }
 
-/* Dark fintech accents */
-.grad-text {
-  background: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* selection */
+::selection {
+  background: var(--pine);
+  color: var(--paper);
 }
 
-.glow {
-  box-shadow: 0 0 40px rgba(52, 211, 153, 0.25);
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---- type utilities ---------------------------------------------------- */
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  line-height: 0.98;
+}
+.display em {
+  font-style: italic;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  color: var(--pine);
+}
+.display .num {
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.label--ink {
+  color: var(--ink-2);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- hairlines / rules ------------------------------------------------- */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.rule--strong {
+  border-top: 2px solid var(--ink);
+}
+
+/* ---- masthead ---------------------------------------------------------- */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+  border-bottom: 1px solid var(--ink);
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+.wordmark .slash {
+  color: var(--pine);
+  font-style: italic;
+}
+.navlink {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: 6px 2px;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.navlink:hover,
+.navlink[aria-current="page"] {
+  color: var(--ink);
+  border-bottom-color: var(--pine);
+}
+
+/* ---- live signal ------------------------------------------------------- */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.live__dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--gold);
+}
+.live__dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  animation: live-ping 2.4s ease-out infinite;
+}
+@keyframes live-ping {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  70%, 100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ---- panels / ledger --------------------------------------------------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--ink);
+  box-shadow: 4px 4px 0 0 rgba(25, 21, 9, 0.10);
+}
+.panel--flat {
+  box-shadow: none;
+  background: transparent;
+}
+
+.ledger-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.ledger-row:first-child {
+  border-top: 0;
+}
+.ledger-row .k {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.ledger-row .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ---- big numbers ------------------------------------------------------- */
+.money {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+.money--pine { color: var(--pine); }
+.money--ox { color: var(--ox); }
+
+/* ---- buttons ----------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  background: transparent;
+  color: var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease,
+    color 0.15s ease;
+  user-select: none;
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.btn--primary {
+  background: var(--pine);
+  color: var(--paper);
+  border-color: var(--pine);
+  box-shadow: 3px 3px 0 0 var(--pine-ink);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--pine-2);
+  box-shadow: 4px 4px 0 0 var(--pine-ink);
+  transform: translate(-1px, -1px);
+}
+.btn--ox {
+  background: var(--ox);
+  color: var(--paper);
+  border-color: var(--ox);
+  box-shadow: 3px 3px 0 0 #4e1c0c;
+}
+.btn--ox:hover:not(:disabled) {
+  background: var(--ox-2);
+  box-shadow: 4px 4px 0 0 #4e1c0c;
+  transform: translate(-1px, -1px);
+}
+.btn--ghost {
+  background: transparent;
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--paper-2);
+}
+.btn .arrow {
+  transition: transform 0.15s ease;
+}
+.btn:hover:not(:disabled) .arrow {
+  transform: translateX(4px);
+}
+
+/* ---- input ------------------------------------------------------------- */
+.field {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 46px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 10px 18px 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field::placeholder {
+  color: var(--line-2);
+}
+.field:focus {
+  border-color: var(--pine);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pine) 18%, transparent);
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ---- stream motif (honest: represents the per-share stream) ----------- */
+.stream {
+  position: relative;
+  height: 2px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+.stream::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 34%;
+  background: linear-gradient(90deg, transparent, var(--pine));
+  animation: stream-flow 3.2s linear infinite;
+}
+.stream::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 999px;
+  background: var(--pine);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pine) 22%, transparent);
+}
+@keyframes stream-flow {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(340%); }
+}
+
+/* ---- sig receipt ------------------------------------------------------- */
+.receipt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--pine) 7%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--pine) 40%, var(--line));
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--pine-ink);
+}
+.receipt a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.err {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ox);
+  background: color-mix(in srgb, var(--ox) 8%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--ox) 35%, var(--line));
+  padding: 12px 14px;
+}
+
+/* ---- footer ------------------------------------------------------------ */
+.addr {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.addr:hover {
+  color: var(--pine);
+  text-decoration-color: var(--pine);
+}
+
+/* ---- reveal ------------------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- wallet-adapter overrides (match the paper/ink system) ------------- */
+.wallet-adapter-button {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 16px !important;
+}
+.wallet-adapter-button:hover {
+  background: var(--pine) !important;
+  border-color: var(--pine) !important;
+}
+.wallet-adapter-button-trigger {
+  font-family: var(--font-mono) !important;
+}
+.wallet-adapter-modal {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border-radius: 0 !important;
+}
+.wallet-adapter-modal .wallet-adapter-modal-header {
+  border-bottom: 1px solid var(--line);
+}
+.wallet-adapter-modal .wallet-adapter-modal-header button {
+  color: var(--ink);
+}
+.wallet-adapter-modal-header h2 {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+}
+.wallet-adapter-list .wallet-adapter-item {
+  background: var(--panel) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  color: var(--ink) !important;
+}
+.wallet-adapter-list .wallet-adapter-item:hover {
+  background: var(--paper-2) !important;
+}
+.wallet-adapter-list .wallet-adapter-item .wallet-adapter-item-button {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+.wallet-adapter-button-list .wallet-adapter-button {
+  border-radius: 0 !important;
+}
+.wallet-adapter-modal-body,
+.wallet-adapter-modal-footer {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+.wallet-adapter-modal-footer button {
+  color: var(--ink) !important;
+}
+.wallet-adapter-modal-footer button:hover {
+  background: var(--paper-2) !important;
+}
+.wallet-adapter-close {
+  color: var(--ink) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .live__dot::after { animation: none; opacity: 0; }
+  .stream::before { animation: none; transform: translateX(0); opacity: 0.5; }
+  .btn, .btn .arrow { transition: none; }
 }
