@@ -9,6 +9,7 @@ import {
   fetchUserState,
   earnedAmount,
   toUi,
+  dpsUi,
   ataFor,
   VaultAccount,
   UserStateAccount,
@@ -123,7 +124,7 @@ export default function DashboardPage() {
 
   const shares = userState ? toUi(userState.shares, 6) : "0";
   const earned = vault && userState ? toUi(earnedAmount(userState, vault), 6) : "0.000000";
-  const dps = vault ? toUi(vault.dividendsPerShare, 6) : "0";
+  const dps = vault ? dpsUi(vault.dividendsPerShare, vault.totalShares) : "0";
   const canClaim = Number(earned) > 0.000001;
   const canWithdraw = !!userState && Number(userState.shares.toString()) > 0;
   const walletShort = wallet.publicKey

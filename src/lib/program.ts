@@ -105,6 +105,14 @@ export function toUi(amount: BN | number | bigint, decimals = 6): string {
   const n = typeof amount === "bigint" ? Number(amount) : Number(amount);
   return (n / 10 ** decimals).toFixed(decimals);
 }
+
+// The vault stores dividends-per-share as a 1e12-scaled accumulator over
+// share-base units (USDC-base * 1e12 / share-base). Convert to "USDC per
+// AAPLx share": USDC = dps * 1e8 / 1e12 / 1e6 = dps / 1e10.
+export function dpsUi(dividendsPerShare: BN, totalShares: BN, decimals = 2): string {
+  if (dividendsPerShare.isZero()) return (0).toFixed(decimals);
+  return (Number(dividendsPerShare) / 1e10).toFixed(decimals);
+}
 export function toBase(amount: number, decimals = 6): BN {
   return new BN(Math.round(amount * 10 ** decimals));
 }

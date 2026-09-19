@@ -162,6 +162,7 @@ export async function txWithdraw(
       userDividend: userDividendAta,
       vaultDividend: vaultDividendAta(vaultKey, dividendMint),
       xstockMint,
+      dividendMint,
       user: provider.wallet.publicKey,
       tokenProgram: tokenProgramFor(xstockMint),
       usdcTokenProgram: TOKEN_PROG,
@@ -187,6 +188,7 @@ export async function txClaim(
       userState: usKey,
       userDividend: userDividendAta,
       vaultDividend: vaultDividendAta(vaultKey, dividendMint),
+      dividendMint,
       user: provider.wallet.publicKey,
       tokenProgram: TOKEN_PROG,
     })
@@ -211,6 +213,7 @@ export async function txTriggerDividend(
       authority: AUTH,
       adminDividend: adminDividendAta,
       vaultDividend: vaultDividendAta(vaultKey, dividendMint),
+      dividendMint,
       systemProgram: SystemProgram.programId,
       tokenProgram: TOKEN_PROG,
     })

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { fetchVaultState, toUi, VaultAccount } from "@/lib/program";
+import { fetchVaultState, toUi, dpsUi, VaultAccount } from "@/lib/program";
 
 function fmtTime(sec: number | null): string {
   if (sec === null) return "—";
@@ -46,7 +46,7 @@ export default function Home() {
   const v = vault as VaultAccount | null;
   const shares = v ? toUi(v.totalShares, 8) : null;
   const xstock = v ? toUi(v.totalXstock, 8) : null;
-  const dps = v ? toUi(v.dividendsPerShare, 6) : null;
+  const dps = v ? dpsUi(v.dividendsPerShare, v.totalShares) : null;
   const distributed = v ? toUi(v.totalDividendsDistributed, 2) : null;
   const lastTs = v ? fmtTime(Number(v.lastDividendTs.toString())) : null;
 

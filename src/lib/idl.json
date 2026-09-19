@@ -152,6 +152,14 @@
           "isSigner": false
         },
         {
+          "name": "dividendMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The USDC dividend mint (Token-v3)."
+          ]
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -196,6 +204,14 @@
           "name": "vaultDividend",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dividendMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The USDC dividend mint (Token-v3)."
+          ]
         },
         {
           "name": "systemProgram",
@@ -245,6 +261,14 @@
           "name": "vaultDividend",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dividendMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The USDC dividend mint (Token-v3)."
+          ]
         },
         {
           "name": "tokenProgram",
