@@ -15,6 +15,7 @@ import {
   UserStateAccount,
 } from "@/lib/program";
 import { txClaim, txWithdraw, makeProvider, tokenProgramFor } from "@/lib/actions";
+import { PythPanel } from "@/components/pyth-panel";
 
 export default function DashboardPage() {
   const { connection } = useConnection();
@@ -206,6 +207,10 @@ export default function DashboardPage() {
         </div>
       )}
       {err && <div className="err mt-4">{err}</div>}
+
+      <div className="mt-10" aria-label="Live prices from Pyth Network">
+        <PythPanel />
+      </div>
     </div>
   );
 }

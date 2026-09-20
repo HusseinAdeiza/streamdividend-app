@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { fetchVaultState, toUi, dpsUi, VaultAccount } from "@/lib/program";
+import { usePyth } from "@/lib/pyth";
+import { PythPanel } from "@/components/pyth-panel";
 
 function fmtTime(sec: number | null): string {
   if (sec === null) return "—";
@@ -22,6 +24,7 @@ export default function Home() {
   const [vault, setVault] = useState<VaultAccount | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [updated, setUpdated] = useState<string | null>(null);
+  const pyth = usePyth(15000);
 
   const load = useCallback(async () => {
     try {
@@ -109,6 +112,17 @@ export default function Home() {
             <StatRow k="AAPLx held in vault" value={xstock} unit="AAPLx" />
             <StatRow k="Dividends per share" value={dps} unit="USDC" accent />
             <StatRow k="USDC distributed to date" value={distributed} unit="USDC" />
+            <StatRow
+              k="Vault value in live USD"
+              value={
+                xstock != null && pyth.aaplx
+                  ? (Number(xstock) * pyth.aaplx.price).toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })
+                  : null
+              }
+              unit="USD (Pyth)"
+            />
             <div className="row sm:col-span-2">
               <span className="k">Last dividend triggered</span>
               <span className="v">{lastTs ?? <Skeleton w="140px" />}</span>
@@ -121,6 +135,11 @@ export default function Home() {
               : "Read from the deployed program and refreshed every 15 seconds."}
           </div>
         </div>
+      </section>
+
+      {/* ============ live market (Pyth) ============ */}
+      <section className="mt-8 sm:mt-12" aria-label="Live prices from Pyth Network">
+        <PythPanel state={pyth} />
       </section>
 
       {/* ============ how it works ============ */}
