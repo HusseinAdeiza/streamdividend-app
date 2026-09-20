@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamDividend — Demo & Technical Videos</title>
+<style>
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b1220; color: #f0f4fa; font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 48px 24px 64px; }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  .sub { color: #8ca3bf; margin: 8px 0 40px; font-size: 15px; }
+  .card { background: #111b2d; border: 1px solid #22324e; border-radius: 16px; overflow: hidden; margin-bottom: 36px; }
+  .card .head { padding: 18px 22px 14px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .badge { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9be0ff; border: 1px solid #2b4a66; border-radius: 999px; padding: 3px 10px; }
+  .badge.alt { color: #78dc96; border-color: #24513a; }
+  .card h2 { font-size: 19px; font-weight: 600; }
+  .card .desc { padding: 0 22px 14px; color: #a9bcd2; font-size: 14px; line-height: 1.55; }
+  video { width: 100%; display: block; background: #000; }
+  .url { padding: 12px 22px 18px; }
+  .url span { display: block; color: #7c8fa8; font-size: 12px; margin-bottom: 5px; }
+  .url code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px; color: #9be0ff; word-break: break-all; background: #0d1626; padding: 7px 10px; border-radius: 8px; display: block; }
+  .foot { color: #5a6b85; font-size: 13px; margin-top: 10px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>StreamDividend — videos</h1>
+  <p class="sub">Apple's real dividends, streamed to you in USDC · live on Solana mainnet · audited, fixed, verified, shipped</p>
+
+  <div class="card">
+    <div class="head"><span class="badge">Pitch</span><h2>Product demo — live mainnet click-through</h2></div>
+    <p class="desc">Connected-wallet walk-through: connect → deposit AAPLx → sign → confirmed on-chain. The deposit shown is a real, finalized mainnet transaction; the ledger reads straight from the deployed program.</p>
+    <video controls preload="metadata" src="StreamDividend_Pitch.mp4"></video>
+    <div class="url"><span>Pitch video URL</span><code>https://husseinadeiza.github.io/streamdividend-app/videos/StreamDividend_Pitch.mp4</code></div>
+  </div>
+
+  <div class="card">
+    <div class="head"><span class="badge alt">Technical know-how</span><h2>Architecture · dividend math · security audit</h2></div>
+    <p class="desc">The deep dive: vault + per-user PDA architecture, checked u128 accumulator math at 1e12 precision, the hand-built Token-2022 TransferChecked CPI, the three on-chain audit findings (2 HIGH, 1 LOW) with PoCs, re-verification (8/8 e2e, all exploits blocked), and the byte-verified fixed binary on mainnet.</p>
+    <video controls preload="metadata" src="StreamDividend_TechKnowHow.mp4"></video>
+    <div class="url"><span>Technical know-how video URL</span><code>https://husseinadeiza.github.io/streamdividend-app/videos/StreamDividend_TechKnowHow.mp4</code></div>
+  </div>
+
+  <p class="foot">StreamDividend · Anchor/Solana · program <code style="color:#9be0ff">LuTgK5iC…9kA</code> · source github.com/HusseinAdeiza/streamdividend</p>
+</div>
+</body>
+</html>
