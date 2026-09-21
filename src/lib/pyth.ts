@@ -29,6 +29,7 @@ export type PythQuote = {
   conf: number;
   pubs: number;
   at: number; // ms epoch (from payload timestampUs)
+  tradeDay?: string; // ISO day (YYYY-MM-DD) of the underlying trade, when known
 };
 
 export type PythSource = "pyth" | "fallback";
@@ -156,11 +157,13 @@ export async function fetchFallbackPrices(): Promise<PythState> {
       const isToday =
         tradeDay && !Number.isNaN(tradeDay.getTime()) &&
         Math.floor(tradeDay.getTime() / 86400000) === Math.floor(Date.now() / 86400000);
+      const tradeDayIso = q.last_time ? String(q.last_time).slice(0, 10) : undefined;
       aapl = {
         price,
         conf: prevClose > 0 ? Math.abs(price - prevClose) * 0.001 : 0, // not a real conf; UI hides it
         pubs: 0,
         at: isToday ? Date.now() : tradeDay && !Number.isNaN(tradeDay.getTime()) ? tradeDay.getTime() : Date.now(),
+        tradeDay: tradeDayIso,
       };
       session = q.curmktstatus ? String(q.curmktstatus) : undefined;
     }

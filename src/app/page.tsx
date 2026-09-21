@@ -121,7 +121,7 @@ export default function Home() {
                     })
                   : null
               }
-              unit="USD (Pyth)"
+              unit={pyth.source === "pyth" ? "USD (Pyth)" : "USD (live)"}
             />
             <div className="row sm:col-span-2">
               <span className="k">Last dividend triggered</span>

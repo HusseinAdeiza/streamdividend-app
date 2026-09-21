@@ -18,6 +18,17 @@ function ago(ms: number, now: number): string {
   return `${Math.floor(m / 60)}h ago`;
 }
 
+// "Sep 18" from an ISO day string (YYYY-MM-DD), in the viewer's timezone label.
+function dayLabel(isoDay: string): string {
+  const d = new Date(`${isoDay}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return isoDay;
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function todayDay(): string {
+  return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
 function PriceTile({
   label,
   sub,
@@ -25,6 +36,7 @@ function PriceTile({
   accent,
   now,
   fallback,
+  tradeDay,
 }: {
   label: string;
   sub: string;
@@ -32,7 +44,16 @@ function PriceTile({
   accent?: boolean;
   now: number;
   fallback: boolean;
+  tradeDay?: string | null;
 }) {
+  // Honest freshness: during market hours show relative age; when the last
+  // trade is from an earlier day, show that day instead of "79h ago".
+  const isStale = !!(
+    fallback &&
+    tradeDay &&
+    tradeDay !== todayDay() &&
+    quote
+  );
   return (
     <div className="pyth-tile">
       <div className="pyth-tile__head">
@@ -57,7 +78,7 @@ function PriceTile({
               </>
             )}
             <span aria-hidden="true">·</span>
-            <span>{ago(quote.at, now)}</span>
+            <span>{isStale ? `last trade ${dayLabel(tradeDay!)}` : ago(quote.at, now)}</span>
           </div>
         </>
       ) : (
@@ -116,6 +137,7 @@ export function PythPanel({ state: injected }: { state?: PythState }) {
             quote={aapl}
             now={now}
             fallback={isFallback}
+            tradeDay={aapl?.tradeDay ?? null}
           />
           <PriceTile
             label="AAPLx (tokenized)"
