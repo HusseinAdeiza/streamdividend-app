@@ -123,8 +123,8 @@ export default function DashboardPage() {
     );
   }
 
-  const shares = userState ? toUi(userState.shares, 6) : "0";
-  const earned = vault && userState ? toUi(earnedAmount(userState, vault), 6) : "0.000000";
+  const shares = userState ? toUi(userState.shares, 8) : "0"; // shares track AAPLx (8-dec) 1:1
+  const earned = vault && userState ? toUi(earnedAmount(userState, vault), 6) : "0.000000"; // USDC (6-dec)
   const dps = vault ? dpsUi(vault.dividendsPerShare, vault.totalShares) : "0";
   const canClaim = Number(earned) > 0.000001;
   const canWithdraw = !!userState && Number(userState.shares.toString()) > 0;

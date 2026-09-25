@@ -50,7 +50,7 @@ export default function Home() {
   const shares = v ? toUi(v.totalShares, 8) : null;
   const xstock = v ? toUi(v.totalXstock, 8) : null;
   const dps = v ? dpsUi(v.dividendsPerShare, v.totalShares) : null;
-  const distributed = v ? toUi(v.totalDividendsDistributed, 2) : null;
+  const distributed = v ? toUi(v.totalDividendsDistributed, 6) : null; // USDC is 6-dec
   const lastTs = v ? fmtTime(Number(v.lastDividendTs.toString())) : null;
 
   return (
