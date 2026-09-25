@@ -89,6 +89,12 @@ export default function Home() {
             <Link href="/dashboard" className="btn btn--secondary btn--lg">
               My position
             </Link>
+            <a
+              href="videos/"
+              className="btn btn--secondary btn--lg"
+            >
+              ▶ Watch the real demo
+            </a>
           </div>
         </div>
       </section>
